@@ -8,5 +8,6 @@ namespace TicTacToe.Models
 	{
 		Circle,
 		Cross,
+		None,
 	}
 }

@@ -6,11 +6,11 @@ namespace TicTacToe.Models
 {
 	public class GameEndedEventArgs : EventArgs
 	{
-		public GameEndedEventArgs(Status winner)
+		public GameEndedEventArgs(Player winner)
 		{
 			this.Winner = winner;
 		}
 
-		public Status Winner { get; set; }
+		public Player Winner { get; set; }
 	}
 }

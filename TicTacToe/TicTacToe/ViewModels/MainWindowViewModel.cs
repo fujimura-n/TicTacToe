@@ -113,7 +113,7 @@ namespace TicTacToe.ViewModels
 			int row = int.Parse(arr[0]);
 			int column = int.Parse(arr[1]);
 
-			model.PutPiece(row, column, model.CurrentPlayer == Player.Circle ? Status.Circle : Status.Cross);
+			model.PutPiece(row, column, model.CurrentPlayer == Player.Circle ? Player.Circle : Player.Cross);
 		}
 
 		public void Reset()
@@ -130,13 +130,13 @@ namespace TicTacToe.ViewModels
 				{
 					switch(model.BoardStatuses[i, j])
 					{
-						case Status.Circle:
+						case Player.Circle:
 							this.boardStatuses[i, j] = Circle;
 							break;
-						case Status.Cross:
+						case Player.Cross:
 							this.boardStatuses[i, j] = Cross;
 							break;
-						case Status.None:
+						case Player.None:
 							this.boardStatuses[i, j] = string.Empty;
 							break;
 					}	
@@ -150,13 +150,13 @@ namespace TicTacToe.ViewModels
 			string message = string.Empty;
 			switch (e.Winner)
 			{
-				case Status.Circle:
+				case Player.Circle:
 					message = "○の勝ち";
 					break;
-				case Status.Cross:
+				case Player.Cross:
 					message = "✕の勝ち";
 					break;
-				case Status.None:
+				case Player.None:
 					message = "引き分け";
 					break;
 			}
