@@ -10,7 +10,8 @@
     xmlns:vm="clr-namespace:TicTacToe.ViewModels"
     Title="MainWindow"
     Width="525"
-    Height="350">
+    Height="350"
+	ResizeMode="NoResize">
 
 	<Window.DataContext>
 		<vm:MainWindowViewModel />
