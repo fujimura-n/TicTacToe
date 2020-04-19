@@ -125,7 +125,7 @@ namespace TicTacToe.ViewModels
 		/// </summary>
 		public void Reset()
 		{
-			this.model.ResetBoard();
+			this.model.ResetGame();
 			this.Label = string.Empty;
 		}
 
@@ -143,10 +143,10 @@ namespace TicTacToe.ViewModels
 					switch(this.model.BoardStatuses[i, j])
 					{
 						case Player.Circle:
-							this.boardStatuses[i, j] = this.Circle;
+							this.boardStatuses[i, j] = Circle;
 							break;
 						case Player.Cross:
-							this.boardStatuses[i, j] = this.Cross;
+							this.boardStatuses[i, j] = Cross;
 							break;
 						case Player.None:
 							this.boardStatuses[i, j] = string.Empty;
