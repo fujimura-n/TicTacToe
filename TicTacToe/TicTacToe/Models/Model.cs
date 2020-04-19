@@ -22,18 +22,37 @@ namespace TicTacToe.Models
 
 		public String  Label{get; set;}
 
+		/// <summary>
+		/// ゲームが終了しているかどうかを取得します。
+		/// </summary>
 		public bool IsGameEnded { get; private set; }
 
-		public Player GameReault { get; set; }
+		/// <summary>
+		/// ゲームの勝者を取得します。
+		/// </summary>
+		public Player Winner { get; set; }
 
+		/// <summary>
+		/// 現在駒を配置できるプレーヤーを取得します。
+		/// </summary>
 		public Player CurrentPlayer { get; private set; }
 
+		/// <summary>
+		/// 盤上の駒の配置状態を取得します。
+		/// </summary>
 		public Player[,] BoardStatuses
 		{
 			get { return this.boardStatuses; }
 		}
 
-		public void PutPiece(int row, int column, Player status)
+		/// <summary>
+		/// 盤上に駒を配置します。
+		/// ゲームがすでに終了している場合、指定した位置にすでに駒が置かれている場合は何もしません。
+		/// </summary>
+		/// <param name="row">配置する行</param>
+		/// <param name="column">配置する列</param>
+		/// <param name="player">配置する駒</param>
+		public void PutPiece(int row, int column, Player player)
 		{
 			if (IsGameEnded)
 			{
@@ -45,20 +64,23 @@ namespace TicTacToe.Models
 				return;
 			}
 
-			boardStatuses[row, column] = status;
+			boardStatuses[row, column] = player;
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
 			(bool isGameEnded, Player winner) = CheckIfGameEnded();
-			IsGameEnded = isGameEnded;
-			GameReault = winner;
+			this.IsGameEnded = isGameEnded;
+			this.Winner = winner;
 			if (isGameEnded)
 			{
-				GameEnded.Invoke(this, new GameEndedEventArgs(GameReault));
+				GameEnded.Invoke(this, new GameEndedEventArgs(this.Winner));
 			}
 
 		}
 
-		public void ResetBoard()
+		/// <summary>
+		/// ゲームをリセットします。
+		/// </summary>
+		public void ResetGame()
 		{
 			for (int i = 0; i < BoardSize; i++)
 			{
@@ -70,8 +92,12 @@ namespace TicTacToe.Models
 			CurrentPlayer = Player.Circle;
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			IsGameEnded = false;
-			GameReault = Player.None;
+			Winner = Player.None;
 		}
+
+		/// <summary>
+		/// <see cref="CurrentPlayer"/>を切り替えます。
+		/// </summary>
 		private void SwitchCurrentPleyer()
 		{
 			if (CurrentPlayer == Player.Circle)
@@ -84,6 +110,11 @@ namespace TicTacToe.Models
 			}
 		}
 
+		/// <summary>
+		/// すでにゲームが終了しているか判定します。
+		/// </summary>
+		/// <returns name="IsGameEnded">ゲームが終了しているかどうか</returns>
+		/// <returns name="winner">ゲームの勝者</returns>
 		private (bool isGameEnded, Player winner) CheckIfGameEnded()
 		{
 			//行の判定
