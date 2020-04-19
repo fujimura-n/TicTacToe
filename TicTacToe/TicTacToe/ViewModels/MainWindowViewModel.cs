@@ -43,7 +43,7 @@ namespace TicTacToe.ViewModels
 		public void Initialize()
 		{
 			this.model.BoardChanged += new EventHandler(this.UpdateBoard);
-			this.model.GameEnded += new EventHandler<GameEndedEventArgs>(this.SetGameResultLabel);
+			this.model.GameEnded += new EventHandler<GameEndedEventArgs>(this.UpdateGameResultLabel);
 		}		
 
 		public string Label
@@ -106,47 +106,35 @@ namespace TicTacToe.ViewModels
 			set { this.label_22 = value; this.RaisePropertyChanged(); }
 		}
 
-		/// <summary>
-		/// 盤上のセルが選択されたときの処理を行います。
-		/// </summary>
-		/// <param name="cellNum">選択されたセルの番号(行番号+ 列番号)</param>
+
 		public void Clicked(string cellNum)
 		{
-			//行番号と列番号を分離して取り出す
 			string[] arr = cellNum.Split(',');
 			int row = int.Parse(arr[0]);
 			int column = int.Parse(arr[1]);
 
-			this.model.PutPiece(row, column, model.CurrentPlayer);
+			model.PutPiece(row, column, model.CurrentPlayer == Player.Circle ? Player.Circle : Player.Cross);
 		}
 
-		/// <summary>
-		/// ゲームをリセットします。
-		/// </summary>
 		public void Reset()
 		{
-			this.model.ResetBoard();
-			this.Label = string.Empty;
+			model.ResetBoard();
+			Label = string.Empty;
 		}
 
-		/// <summary>
-		/// 盤の表示を更新します。
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void UpdateBoard(object sender, EventArgs e)
 		{
 			for (int i = 0; i < BoardSize; i++)
 			{
 				for (int j = 0; j < BoardSize; j++)
 				{
-					switch(this.model.BoardStatuses[i, j])
+					switch(model.BoardStatuses[i, j])
 					{
 						case Player.Circle:
-							this.boardStatuses[i, j] = this.Circle;
+							this.boardStatuses[i, j] = Circle;
 							break;
 						case Player.Cross:
-							this.boardStatuses[i, j] = this.Cross;
+							this.boardStatuses[i, j] = Cross;
 							break;
 						case Player.None:
 							this.boardStatuses[i, j] = string.Empty;
@@ -157,12 +145,7 @@ namespace TicTacToe.ViewModels
 			SetLabels();
 		}
 
-		/// <summary>
-		/// ゲームの結果を表示します。
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void SetGameResultLabel(object sender, GameEndedEventArgs e)
+		private void UpdateGameResultLabel(object sender, GameEndedEventArgs e)
 		{
 			string message = string.Empty;
 			switch (e.Winner)
@@ -180,9 +163,6 @@ namespace TicTacToe.ViewModels
 			Label = $"ゲーム結果: {message}";
 		}
 
-		/// <summary>
-		/// <see cref="boardStatuses"/>の値をViewのLabelに反映します。
-		/// </summary>
 		private void SetLabels()
 		{
 			Button_00Label = this.boardStatuses[0, 0];
