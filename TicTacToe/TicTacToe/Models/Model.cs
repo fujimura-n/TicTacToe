@@ -7,18 +7,32 @@ using Livet;
 
 namespace TicTacToe.Models
 {
+	//TicTacToeModel
 	public class Model : NotificationObject
 	{
-		private const int BoardSize = 3;
-		private readonly Player[,] boardStatuses = new Player[BoardSize, BoardSize]
-		{
-			{ Player.None, Player.None, Player.None },
-			{ Player.None, Player.None, Player.None },
-			{ Player.None, Player.None, Player.None },
-		};
+		private int boardSize;
+		private readonly Player[,] boardStatuses;
 
 		public event EventHandler BoardChanged;
+		public event EventHandler CurrentPlayerChanged;
 		public event EventHandler<GameEndedEventArgs> GameEnded;
+
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		public Model(int boardSize)
+		{
+			this.boardSize = boardSize;
+			//boardStatusesの初期化
+			boardStatuses = new Player[boardSize, boardSize];
+			for (int i = 0; i < boardSize; i++)
+			{
+				for (int j = 0; j < boardSize; j++)
+				{
+					boardStatuses[i, j] = Player.None;
+				}
+			}
+		}
 
 		public String  Label{get; set;}
 
@@ -82,14 +96,15 @@ namespace TicTacToe.Models
 		/// </summary>
 		public void ResetGame()
 		{
-			for (int i = 0; i < BoardSize; i++)
+			for (int i = 0; i < boardSize; i++)
 			{
-				for (int j = 0; j < BoardSize; j++)
+				for (int j = 0; j < boardSize; j++)
 				{
 					boardStatuses[i, j] = Player.None;
 				}
 			}
 			CurrentPlayer = Player.Circle;
+			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			IsGameEnded = false;
 			Winner = Player.None;
@@ -103,10 +118,12 @@ namespace TicTacToe.Models
 			if (CurrentPlayer == Player.Circle)
 			{
 				CurrentPlayer = Player.Cross;
+				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			}
 			else if (CurrentPlayer == Player.Cross)
 			{
 				CurrentPlayer = Player.Circle;
+				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			}
 		}
 
@@ -118,11 +135,11 @@ namespace TicTacToe.Models
 		private (bool isGameEnded, Player winner) CheckIfGameEnded()
 		{
 			//行の判定
-			for (int i = 0; i < BoardSize; i++)
+			for (int i = 0; i < boardSize; i++)
 			{
 				var row = new List<Player>();
 
-				for (int j = 0; j < BoardSize; j++)
+				for (int j = 0; j < boardSize; j++)
 				{
 					row.Add(this.BoardStatuses[i, j]);
 				}
@@ -134,10 +151,10 @@ namespace TicTacToe.Models
 			}
 
 			//列の判定
-			for (int j = 0; j < BoardSize; j++)
+			for (int j = 0; j < boardSize; j++)
 			{
 				var column = new List<Player>();
-				for (int i = 0; i < BoardSize; i++)
+				for (int i = 0; i < boardSize; i++)
 				{
 					column.Add(this.BoardStatuses[i, j]);
 				}

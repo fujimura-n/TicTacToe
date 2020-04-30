@@ -9,9 +9,8 @@
     xmlns:v="clr-namespace:TicTacToe.Views"
     xmlns:vm="clr-namespace:TicTacToe.ViewModels"
     Title="MainWindow"
-    Width="525"
-    Height="350"
-	ResizeMode="NoResize">
+    Width="800"
+    Height="600">
 
 	<Window.DataContext>
 		<vm:MainWindowViewModel />
@@ -32,77 +31,19 @@
 
 	</behaviors:Interaction.Triggers>
 
-	<Grid >
-		<Button x:Name="button00" Content="{Binding Button_00Label}" HorizontalAlignment="Left" Margin="9,9,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="0,0"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_01Label}" HorizontalAlignment="Left" Margin="104,9,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Clicked" MethodParameter="0,1"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_02Label}" HorizontalAlignment="Left" Margin="198,9,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="0,2"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_10Label}" HorizontalAlignment="Left" Margin="9,103,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="1,0"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_11Label}" HorizontalAlignment="Left" Margin="104,104,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="1,1"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_12Label}" HorizontalAlignment="Left" Margin="198,104,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="1,2"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_20Label}" HorizontalAlignment="Left" Margin="9,199,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="2,0"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_21Label}" HorizontalAlignment="Left" Margin="104,201,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Clicked" MethodParameter="2,1"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="{Binding Button_22Label}" HorizontalAlignment="Left" Margin="198,200,0,0" VerticalAlignment="Top" Height="90" Width="90">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}"  MethodName="Clicked" MethodParameter="2,2"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Button Content="リセット" HorizontalAlignment="Left" Margin="325,269,0,0" VerticalAlignment="Top">
-			<behaviors:Interaction.Triggers>
-				<behaviors:EventTrigger EventName="Click">
-					<l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Reset"/>
-				</behaviors:EventTrigger>
-			</behaviors:Interaction.Triggers>
-		</Button>
-		<Label Content="{Binding Label}" HorizontalAlignment="Left" Margin="325,233,0,0" VerticalAlignment="Top"/>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*"/>
+			<ColumnDefinition Width="1*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid x:Name="BoadGrid" Grid.Column="0">
+			
+		</Grid>
+		<Grid Grid.Column="1">
+			<Label Name="CurrentPlayerLabel" HorizontalAlignment="Left" Margin="30,200,0,0" VerticalAlignment="Top"/>
+			<Label Name="GameResultLabel" HorizontalAlignment="Left" Margin="30,200,0,0" VerticalAlignment="Top"/>
+			<Button x:Name="ResetButton" Content="リセット" HorizontalAlignment="Left" Margin="30,250,0,0" VerticalAlignment="Top"/>
+		</Grid>
 	</Grid>
 </Window>
