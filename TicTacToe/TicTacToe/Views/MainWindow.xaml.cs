@@ -25,9 +25,10 @@ namespace TicTacToe.Views
      */
 	public partial class MainWindow : Window
 	{
-		private const int BoardSize = 5;
+		private const int BoardSize = 10;
 		private const int ButtonSize = 100;
-		private Model model = new Model(BoardSize);
+		private const int AlignNumber = 3;
+		private Model model = new Model(BoardSize, AlignNumber);
 		private const string Circle = "○";
 		private const string Cross = "✕";
 		private readonly Button[,] buttons = new Button[BoardSize, BoardSize];

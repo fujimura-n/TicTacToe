@@ -11,6 +11,7 @@ namespace TicTacToe.Models
 	public class Model : NotificationObject
 	{
 		private int boardSize;
+		private int alignNumber;
 		private readonly Player[,] boardStatuses;
 
 		public event EventHandler BoardChanged;
@@ -20,9 +21,12 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		public Model(int boardSize)
+		/// <param name="boardSize">ボードの大きさ</param>
+		/// <param name="alignNumber">いくつ揃ったら勝ちとするか</param>
+		public Model(int boardSize, int alignNumber)
 		{
 			this.boardSize = boardSize;
+			this.alignNumber = alignNumber;
 			//boardStatusesの初期化
 			boardStatuses = new Player[boardSize, boardSize];
 			for (int i = 0; i < boardSize; i++)
@@ -81,7 +85,7 @@ namespace TicTacToe.Models
 			boardStatuses[row, column] = player;
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
-			(bool isGameEnded, Player winner) = CheckIfGameEnded();
+			(bool isGameEnded, Player winner) = CheckIfGameEnded(boardSize, alignNumber);
 			this.IsGameEnded = isGameEnded;
 			this.Winner = winner;
 			if (isGameEnded)
@@ -132,7 +136,7 @@ namespace TicTacToe.Models
 		/// </summary>
 		/// <returns name="IsGameEnded">ゲームが終了しているかどうか</returns>
 		/// <returns name="winner">ゲームの勝者</returns>
-		private (bool isGameEnded, Player winner) CheckIfGameEnded()
+		private (bool isGameEnded, Player winner) CheckIfGameEnded(int boardSize, int alignNumber)
 		{
 			//行の判定
 			for (int i = 0; i < boardSize; i++)
@@ -143,11 +147,13 @@ namespace TicTacToe.Models
 				{
 					row.Add(this.BoardStatuses[i, j]);
 				}
-
-				if(row[0] == row[1] && row[0] == row[2] && row[0] != Player.None)
+				
+				(bool isGameEnded, Player winner) = JudgeAlign(row, alignNumber);
+				if (isGameEnded)
 				{
-					return (true, row[0]);
+					return (isGameEnded, winner);
 				}
+				row.Clear();
 			}
 
 			//列の判定
@@ -158,33 +164,71 @@ namespace TicTacToe.Models
 				{
 					column.Add(this.BoardStatuses[i, j]);
 				}
-				if (column[0] == column[1] && column[0] == column[2] && column[0] != Player.None)
+
+				(bool isGameEnded, Player winner) = JudgeAlign(column, alignNumber);
+				if (isGameEnded)
 				{
-					return (true, column[0]);
+					return (isGameEnded, winner);
 				}
+				column.Clear();
+
+
 			}
 
 			//斜めの判定
-			var diagonally = new List<Player>();
-			diagonally.Add(this.boardStatuses[0, 0]);
-			diagonally.Add(this.boardStatuses[1, 1]);
-			diagonally.Add(this.boardStatuses[2, 2]);
-			if (diagonally[0] == diagonally[1] && diagonally[0] == diagonally[2] && diagonally[0] != Player.None)
+			var diagonally_right = new List<Player>();
+			var diagonally_left = new List<Player>();
+			for (int i = 0; i < boardSize; i++)
 			{
-				return (true, diagonally[0]);
+				for (int j = 0; j < boardSize; j++)
+				{
+					//右斜めの要素をListに格納
+					var x = i;
+					var y = j;
+					while (0 <= x && y < boardSize)
+					{
+						diagonally_right.Add(this.BoardStatuses[x, y]);
+						x-- ;
+						y++;
+					}
+
+					//左斜めの要素をListに格納
+					x = i;
+					y = j;
+					while (x < boardSize && y < boardSize)
+					{
+						diagonally_left.Add(this.BoardStatuses[x, y]);
+						x++;
+						y++;
+					}
+
+					//判定
+					bool isGameEnded;
+					Player winner;
+					(isGameEnded, winner) = JudgeAlign(diagonally_right, alignNumber);
+					if (isGameEnded)
+					{
+						return (isGameEnded, winner);
+					}
+					diagonally_right.Clear();
+
+					(isGameEnded, winner) = JudgeAlign(diagonally_left, alignNumber);
+					if (isGameEnded)
+					{
+						return (isGameEnded, winner);
+					}
+					diagonally_left.Clear();
+				}
+
+
+				
 			}
 
-			diagonally.Clear();
-			diagonally.Add(this.boardStatuses[0, 2]);
-			diagonally.Add(this.boardStatuses[1, 1]);
-			diagonally.Add(this.boardStatuses[2, 0]);
-			if (diagonally[0] == diagonally[1] && diagonally[0] == diagonally[2] && diagonally[0] != Player.None)
-			{
-				return (true, diagonally[0]);
-			}
+			
+
 
 			//引き分け判定
-			foreach(var a in this.boardStatuses)
+			foreach (var a in this.boardStatuses)
 			{
 				if(a == Player.None)
 				{
@@ -194,6 +238,39 @@ namespace TicTacToe.Models
 
 			return (true, Player.None);
 
+		}
+
+		/// <summary>
+		/// <see cref="list"/>の中で同じ駒が<see cref="alignNumber"/>個連続して並んでいるか判定します。
+		/// </summary>
+		/// <param name="list">配置された駒の列</param>
+		/// <param name="alignNumber">列の中でいくつ揃ったら勝ちとするか</param>
+		/// <returns name="IsGameEnded">ゲームが終了しているかどうか</returns>
+		/// <returns name="winner">ゲームの勝者</returns>
+		private (bool isGameEnded, Player winner) JudgeAlign(List<Player> list, int alignNumber)
+		{
+			if (list.Count < alignNumber)
+			{
+				return (false, Player.None);
+			}
+			var count = 0;
+			for (int index = 0; index < list.Count - 1; index++)
+			{
+				if (!list[index].Equals(Player.None) && list[index].Equals(list[index + 1]))
+				{
+					count++;
+				}
+				else
+				{
+					count = 0;
+				}
+
+				if (count >= alignNumber - 1)
+				{
+					return (true, list[index]);
+				}
+			}
+			return (false, Player.None);
 		}
 	}
 }
