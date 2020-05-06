@@ -10,9 +10,9 @@ namespace TicTacToe.Models
 	//TicTacToeModel
 	public class Model : NotificationObject
 	{
-		private int boardSize;
-		private int alignNumber;
-		private readonly Player[,] boardStatuses;
+		private readonly int boardSize;
+		private readonly int alignNumber;
+		private readonly Board<Player> board;
 
 		public event EventHandler BoardChanged;
 		public event EventHandler CurrentPlayerChanged;
@@ -27,15 +27,7 @@ namespace TicTacToe.Models
 		{
 			this.boardSize = boardSize;
 			this.alignNumber = alignNumber;
-			//boardStatusesの初期化
-			boardStatuses = new Player[boardSize, boardSize];
-			for (int i = 0; i < boardSize; i++)
-			{
-				for (int j = 0; j < boardSize; j++)
-				{
-					boardStatuses[i, j] = Player.None;
-				}
-			}
+			this.board = new Board<Player>(Player.None, boardSize);
 		}
 
 		public String  Label{get; set;}
@@ -60,7 +52,7 @@ namespace TicTacToe.Models
 		/// </summary>
 		public Player[,] BoardStatuses
 		{
-			get { return this.boardStatuses; }
+			get { return this.board.BoardStatuses; }
 		}
 
 		/// <summary>
@@ -77,12 +69,12 @@ namespace TicTacToe.Models
 				return;
 			}
 
-			if (boardStatuses[row, column] != Player.None)
+			if (this.board.BoardStatuses[row, column] != Player.None)
 			{
 				return;
 			}
 
-			boardStatuses[row, column] = player;
+			this.board.PutPiece(row, column, player);
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
 			(bool isGameEnded, Player winner) = CheckIfGameEnded(boardSize, alignNumber);
@@ -100,13 +92,7 @@ namespace TicTacToe.Models
 		/// </summary>
 		public void ResetGame()
 		{
-			for (int i = 0; i < boardSize; i++)
-			{
-				for (int j = 0; j < boardSize; j++)
-				{
-					boardStatuses[i, j] = Player.None;
-				}
-			}
+			this.board.ResetBoard(Player.None);
 			CurrentPlayer = Player.Circle;
 			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			BoardChanged.Invoke(this, EventArgs.Empty);
@@ -171,8 +157,6 @@ namespace TicTacToe.Models
 					return (isGameEnded, winner);
 				}
 				column.Clear();
-
-
 			}
 
 			//斜めの判定
@@ -218,24 +202,17 @@ namespace TicTacToe.Models
 						return (isGameEnded, winner);
 					}
 					diagonally_left.Clear();
-				}
-
-
-				
+				}				
 			}
 
-			
-
-
 			//引き分け判定
-			foreach (var a in this.boardStatuses)
+			foreach (var a in this.BoardStatuses)
 			{
 				if(a == Player.None)
 				{
 					return (false, Player.None);
 				}				
 			}
-
 			return (true, Player.None);
 
 		}
