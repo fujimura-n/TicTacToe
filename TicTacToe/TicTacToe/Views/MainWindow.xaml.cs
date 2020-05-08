@@ -43,7 +43,17 @@ namespace TicTacToe.Views
 			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_usagi_maru.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
 		};
-	
+		private ImageBrush crossWinnerImage = new ImageBrush()
+		{
+			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_bear.png", UriKind.Relative)),
+			Stretch = Stretch.Uniform
+		};
+		private ImageBrush circleWinnerImage = new ImageBrush()
+		{
+			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_rabbit.png", UriKind.Relative)),
+			Stretch = Stretch.Uniform
+		};
+
 
 
 		public MainWindow()
@@ -145,6 +155,7 @@ namespace TicTacToe.Views
 			this.model.ResetGame();
 			DisplayCurrentPlayer();
 			GameResultLabel.Content = String.Empty;
+			WinnerImage.Background = null;
 		}
 
 		//現在のプレーヤーを表示します。
@@ -186,9 +197,11 @@ namespace TicTacToe.Views
 			{
 				case Player.Circle:
 					message = "○の勝ち";
+					WinnerImage.Background = circleWinnerImage;
 					break;
 				case Player.Cross:
 					message = "✕の勝ち";
+					WinnerImage.Background = crossWinnerImage;
 					break;
 				case Player.None:
 					message = "引き分け";

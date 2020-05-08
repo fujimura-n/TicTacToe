@@ -38,12 +38,13 @@
 		</Grid.ColumnDefinitions>
 
 		<Grid x:Name="BoadGrid" Grid.Column="0">
-			
+
 		</Grid>
 		<Grid Grid.Column="1">
 			<Label Name="CurrentPlayerLabel" HorizontalAlignment="Left" Margin="30,200,0,0" VerticalAlignment="Top"/>
 			<Label Name="GameResultLabel" HorizontalAlignment="Left" Margin="30,200,0,0" VerticalAlignment="Top"/>
 			<Button x:Name="ResetButton" Content="リセット" HorizontalAlignment="Left" Margin="30,250,0,0" VerticalAlignment="Top"/>
+			<Grid x:Name="WinnerImage" HorizontalAlignment="Left" Height="152" Margin="50,340,0,0" VerticalAlignment="Top" Width="146"/>
 		</Grid>
 	</Grid>
 </Window>
