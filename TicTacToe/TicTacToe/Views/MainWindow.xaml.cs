@@ -26,12 +26,24 @@ namespace TicTacToe.Views
 	public partial class MainWindow : Window
 	{
 		private const int BoardSize = 5;
-		private const int ButtonSize = 100;
+		private const int ButtonSize = 110;
 		private const int AlignNumber = 3;
 		private ITicTacToeModel model = new CPUTicTacToeModel(BoardSize, AlignNumber);
 		private const string Circle = "○";
 		private const string Cross = "✕";
 		private readonly Button[,] buttons = new Button[BoardSize, BoardSize];
+		private ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
+		private ImageBrush crossImageBrush = new ImageBrush()
+		{
+			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_kuma_batsu.png", UriKind.Relative)),
+			Stretch = Stretch.Uniform
+		};
+		private ImageBrush circleImageBrush = new ImageBrush()
+		{
+			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_usagi_maru.png", UriKind.Relative)),
+			Stretch = Stretch.Uniform
+		};
+	
 
 
 		public MainWindow()
@@ -41,6 +53,7 @@ namespace TicTacToe.Views
 			this.model.CurrentPlayerChanged += new EventHandler((s, e) => this.DisplayCurrentPlayer());
 			this.model.GameEnded += new EventHandler<GameEndedEventArgs>(this.ExitGame);
 
+			
 			//Gridの設定
 			for (int i = 0; i < BoardSize; i++)
 			{
@@ -48,6 +61,7 @@ namespace TicTacToe.Views
 				RowDefinition rowDef = new RowDefinition();
 				BoadGrid.ColumnDefinitions.Add(colDef);
 				BoadGrid.RowDefinitions.Add(rowDef);
+				Background = bgImageBrush;
 			}
 
 			//Buttonの配置
@@ -61,6 +75,7 @@ namespace TicTacToe.Views
 						Height = ButtonSize,
 						HorizontalAlignment = HorizontalAlignment.Center,
 						VerticalAlignment = VerticalAlignment.Center,
+						Opacity = 0.9,
 					};
 
 					var row = i;
@@ -108,12 +123,13 @@ namespace TicTacToe.Views
 					switch (status)
 					{
 						case Player.Circle:
-							buttons[i, j].Content = Circle;
+							buttons[i, j].Background = circleImageBrush;
 							break;
 						case Player.Cross:
-							buttons[i, j].Content = Cross;
+							buttons[i, j].Background = crossImageBrush;
 							break;
 						case Player.None:
+							buttons[i, j].Background = null;
 							buttons[i, j].Content = String.Empty;
 							break;
 					}

@@ -9,8 +9,8 @@
     xmlns:v="clr-namespace:TicTacToe.Views"
     xmlns:vm="clr-namespace:TicTacToe.ViewModels"
     Title="MainWindow"
-    Width="800"
-    Height="600">
+    Width="1000"
+    Height="800">
 
 	<Window.DataContext>
 		<vm:MainWindowViewModel />
