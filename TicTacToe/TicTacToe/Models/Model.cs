@@ -8,7 +8,7 @@ using Livet;
 namespace TicTacToe.Models
 {
 	//TicTacToeModel
-	public class Model : NotificationObject
+	public class Model : NotificationObject, ITicTacToeModel
 	{
 		private readonly int boardSize;
 		private readonly int alignNumber;
@@ -30,8 +30,6 @@ namespace TicTacToe.Models
 			this.board = new Board<Player>(Player.None, boardSize);
 		}
 
-		public String  Label{get; set;}
-
 		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
 		/// </summary>
@@ -45,7 +43,7 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// 現在駒を配置できるプレーヤーを取得します。
 		/// </summary>
-		public Player CurrentPlayer { get; private set; }
+		public Player CurrentPlayer { get; set; }
 
 		/// <summary>
 		/// 盤上の駒の配置状態を取得します。
