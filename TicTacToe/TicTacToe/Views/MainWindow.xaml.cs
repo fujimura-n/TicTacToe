@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TicTacToe.Models;
 using TicTacToe.Models.Contexts;
-using TicTacToe.ViewModels;
 
 namespace TicTacToe.Views
 {
@@ -31,25 +30,25 @@ namespace TicTacToe.Views
 		private readonly Button[,] buttons;
 		private readonly ITicTacToeModel model = ModelProvider.Instance.TicTacToeModel;
 		private readonly int boardSize = ModelProvider.Instance.TicTacToeModel.BoardSize;
-		private readonly ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
+		private readonly ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
 		private readonly ImageBrush crossImageBrush = new ImageBrush()
 		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_kuma_batsu.png", UriKind.Relative)),
+			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_kuma_batsu.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
 		};
-		private ImageBrush circleImageBrush = new ImageBrush()
+		private readonly ImageBrush circleImageBrush = new ImageBrush()
 		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_usagi_maru.png", UriKind.Relative)),
+			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_usagi_maru.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
 		};
-		private ImageBrush crossWinnerImage = new ImageBrush()
+		private readonly ImageBrush crossWinnerImage = new ImageBrush()
 		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_bear.png", UriKind.Relative)),
+			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_bear.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
 		};
-		private ImageBrush circleWinnerImage = new ImageBrush()
+		private readonly ImageBrush circleWinnerImage = new ImageBrush()
 		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_rabbit.png", UriKind.Relative)),
+			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_rabbit.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
 		};
 

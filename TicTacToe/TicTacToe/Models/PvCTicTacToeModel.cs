@@ -7,7 +7,7 @@ using Livet;
 
 namespace TicTacToe.Models
 {
-	public class CPUTicTacToeModel : NotificationObject, ITicTacToeModel
+	public class PvCTicTacToeModel : NotificationObject, ITicTacToeModel
 	{
 		private Model model;
 
@@ -16,7 +16,7 @@ namespace TicTacToe.Models
 		/// </summary>
 		/// <param name="boardSize">ボードの大きさ</param>
 		/// <param name="alignNumber">いくつ揃ったら勝ちとするか</param>
-		public CPUTicTacToeModel(int boardSize, int alignNumber)
+		public PvCTicTacToeModel(int boardSize, int alignNumber)
 		{
 			this.BoardSize = boardSize;
 			this.AlignNumber = alignNumber;

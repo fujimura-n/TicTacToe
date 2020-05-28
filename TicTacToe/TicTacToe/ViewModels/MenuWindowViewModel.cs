@@ -11,8 +11,8 @@ namespace TicTacToe.ViewModels
 {
 	public class MenuWindowViewModel : ViewModel
 	{
-		private const int BoardSize = 3;
-		private const int AlignNumber = 3;
+		private const int BoardSize = 5;
+		private const int AlignNumber = 5;
 		public void Initialize()
 		{
 			
@@ -57,7 +57,7 @@ namespace TicTacToe.ViewModels
 
 		public void SelectPvCMode()
 		{
-			ModelProvider.Instance.TicTacToeModel = new CPUTicTacToeModel(BoardSize, AlignNumber);
+			ModelProvider.Instance.TicTacToeModel = new PvCTicTacToeModel(BoardSize, AlignNumber);
 			var message = new TransitionMessage(new MainWindowViewModel(), "SelectModeMessageKey");
 			Messenger.Raise(message);
 		}
