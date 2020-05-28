@@ -11,6 +11,17 @@ namespace TicTacToe.Models
 		event EventHandler<GameEndedEventArgs> GameEnded;
 
 		/// <summary>
+		/// ボードの大きさ（マスの数）
+		/// </summary>
+		int BoardSize { get; }
+
+		/// <summary>
+		/// いくつ揃ったら勝ちとするか
+		/// </summary>
+		int AlignNumber { get; }
+
+
+		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
 		/// </summary>
 		bool IsGameEnded { get; }

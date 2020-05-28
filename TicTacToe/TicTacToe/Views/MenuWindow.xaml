@@ -1,0 +1,45 @@
+﻿<Window x:Class="TicTacToe.Views.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+        xmlns:v="clr-namespace:TicTacToe.Views"
+        xmlns:vm="clr-namespace:TicTacToe.ViewModels"
+        Title="MenuWindow" Height="350" Width="525">
+
+	<Window.DataContext>
+		<vm:MenuWindowViewModel />
+	</Window.DataContext>
+
+	<behaviors:Interaction.Triggers>
+		<!-- When ContentRendered event raised, Initialize method of ViewModel would be called. -->
+		<behaviors:EventTrigger EventName="ContentRendered">
+			<l:LivetCallMethodAction MethodTarget="{Binding}" MethodName="Initialize" />
+		</behaviors:EventTrigger>
+		<l:InteractionMessageTrigger MessageKey="SelectModeMessageKey" Messenger="{Binding Messenger}">
+			<l:TransitionInteractionMessageAction WindowType="{x:Type v:MainWindow}" Mode="Modal"/>
+		</l:InteractionMessageTrigger>
+
+		<!-- Dispose method is called, when Window closing. -->
+		<behaviors:EventTrigger EventName="Closed">
+			<l:DataContextDisposeAction />
+		</behaviors:EventTrigger>
+
+		<!-- If you make user choose 'OK or Cancel' closing Window, then please use Window Close cancel Behavior. -->
+
+	</behaviors:Interaction.Triggers>
+
+	<Grid x:Name="MainGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="3*"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+
+		<Grid x:Name="TitleGrid" Grid.Row="0"></Grid>
+		<Grid x:Name="MenuGrid" Grid.Row="1">
+			<Button x:Name="PvPModeButton" Content="対人モード" Command="{Binding Path=SelectPvPModeCommand}" HorizontalAlignment="Left" Margin="86,0,0,0" VerticalAlignment="Center" Height="52" Width="150"/>
+			<Button x:Name="PvCModeButton" Content="CPUモード" Command="{Binding Path=SelectPvCModeCommand}" HorizontalAlignment="Left" Margin="286,0,0,0" VerticalAlignment="Center" Height="52" Width="150"/>
+		</Grid>
+	</Grid>
+
+</Window>

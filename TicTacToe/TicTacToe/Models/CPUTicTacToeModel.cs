@@ -9,8 +9,6 @@ namespace TicTacToe.Models
 {
 	public class CPUTicTacToeModel : NotificationObject, ITicTacToeModel
 	{
-		private readonly int boardSize;
-		private readonly int alignNumber;
 		private Model model;
 
 		/// <summary>
@@ -20,14 +18,24 @@ namespace TicTacToe.Models
 		/// <param name="alignNumber">いくつ揃ったら勝ちとするか</param>
 		public CPUTicTacToeModel(int boardSize, int alignNumber)
 		{
-			this.boardSize = boardSize;
-			this.alignNumber = alignNumber;
+			this.BoardSize = boardSize;
+			this.AlignNumber = alignNumber;
 			this.model = new Model(boardSize, alignNumber);
 
 			this.model.BoardChanged += new EventHandler((s, e) => this.BoardChanged.Invoke(this, EventArgs.Empty));
 			this.model.CurrentPlayerChanged += new EventHandler(async (s, e) => await this.CurrentPlayerChangedActionAsync());
 			this.model.GameEnded += new EventHandler<GameEndedEventArgs>((s, e) => this.GameEnded.Invoke(this, e));
 		}
+
+		/// <summary>
+		/// ボードの大きさ（マスの数）
+		/// </summary>
+		public int BoardSize { get; }
+
+		/// <summary>
+		/// いくつ揃ったら勝ちとするか
+		/// </summary>
+		public int AlignNumber { get; }
 
 		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
@@ -94,13 +102,13 @@ namespace TicTacToe.Models
 			int row;
 			int column;
 			Random random = new Random();
-			row = random.Next(0, boardSize);
-			column = random.Next(0, boardSize);
+			row = random.Next(0, BoardSize);
+			column = random.Next(0, BoardSize);
 
 			while (!this.BoardStatuses[row, column].Equals(Player.None))
 			{
-				row = random.Next(0, boardSize);
-				column = random.Next(0, boardSize);
+				row = random.Next(0, BoardSize);
+				column = random.Next(0, BoardSize);
 			}
 
 			return (row, column);

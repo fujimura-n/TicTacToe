@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TicTacToe.Models;
+using TicTacToe.Models.Contexts;
+using TicTacToe.ViewModels;
 
 namespace TicTacToe.Views
 {
@@ -25,15 +27,12 @@ namespace TicTacToe.Views
      */
 	public partial class MainWindow : Window
 	{
-		private const int BoardSize = 5;
 		private const int ButtonSize = 110;
-		private const int AlignNumber = 3;
-		private ITicTacToeModel model = new CPUTicTacToeModel(BoardSize, AlignNumber);
-		private const string Circle = "○";
-		private const string Cross = "✕";
-		private readonly Button[,] buttons = new Button[BoardSize, BoardSize];
-		private ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
-		private ImageBrush crossImageBrush = new ImageBrush()
+		private readonly Button[,] buttons;
+		private readonly ITicTacToeModel model = ModelProvider.Instance.TicTacToeModel;
+		private readonly int boardSize = ModelProvider.Instance.TicTacToeModel.BoardSize;
+		private readonly ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
+		private readonly ImageBrush crossImageBrush = new ImageBrush()
 		{
 			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_kuma_batsu.png", UriKind.Relative)),
 			Stretch = Stretch.Uniform
@@ -54,18 +53,17 @@ namespace TicTacToe.Views
 			Stretch = Stretch.Uniform
 		};
 
-
-
 		public MainWindow()
 		{
 			InitializeComponent();
 			this.model.BoardChanged += new EventHandler(this.UpdateBoard);
 			this.model.CurrentPlayerChanged += new EventHandler((s, e) => this.DisplayCurrentPlayer());
 			this.model.GameEnded += new EventHandler<GameEndedEventArgs>(this.ExitGame);
+			buttons = new Button[boardSize, boardSize];
 
-			
+
 			//Gridの設定
-			for (int i = 0; i < BoardSize; i++)
+			for (int i = 0; i < boardSize; i++)
 			{
 				ColumnDefinition colDef = new ColumnDefinition();
 				RowDefinition rowDef = new RowDefinition();
@@ -75,9 +73,9 @@ namespace TicTacToe.Views
 			}
 
 			//Buttonの配置
-			for (int i = 0; i < BoardSize; i++)
+			for (int i = 0; i < boardSize; i++)
 			{
-				for (int j = 0; j < BoardSize; j++)
+				for (int j = 0; j < boardSize; j++)
 				{
 					Button button = new Button()
 					{
@@ -125,9 +123,9 @@ namespace TicTacToe.Views
 		private void UpdateBoard(object sender, EventArgs e)
 		{
 			//boardStatusesの更新
-			for (int i = 0; i < BoardSize; i++)
+			for (int i = 0; i < boardSize; i++)
 			{
-				for (int j = 0; j < BoardSize; j++)
+				for (int j = 0; j < boardSize; j++)
 				{
 					var status = model.BoardStatuses[i, j];
 					switch (status)

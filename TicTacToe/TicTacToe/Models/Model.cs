@@ -10,8 +10,6 @@ namespace TicTacToe.Models
 	//TicTacToeModel
 	public class Model : NotificationObject, ITicTacToeModel
 	{
-		private readonly int boardSize;
-		private readonly int alignNumber;
 		private readonly Board<Player> board;
 
 		public event EventHandler BoardChanged;
@@ -25,10 +23,20 @@ namespace TicTacToe.Models
 		/// <param name="alignNumber">いくつ揃ったら勝ちとするか</param>
 		public Model(int boardSize, int alignNumber)
 		{
-			this.boardSize = boardSize;
-			this.alignNumber = alignNumber;
+			this.BoardSize = boardSize;
+			this.AlignNumber = alignNumber;
 			this.board = new Board<Player>(Player.None, boardSize);
 		}
+
+		/// <summary>
+		/// ボードの大きさ（マスの数）
+		/// </summary>
+		public int BoardSize { get; }
+
+		/// <summary>
+		/// いくつ揃ったら勝ちとするか
+		/// </summary>
+		public int AlignNumber { get; }
 
 		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
@@ -75,7 +83,7 @@ namespace TicTacToe.Models
 			this.board.PutPiece(row, column, player);
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
-			(bool isGameEnded, Player winner) = CheckIfGameEnded(boardSize, alignNumber);
+			(bool isGameEnded, Player winner) = CheckIfGameEnded(BoardSize, AlignNumber);
 			this.IsGameEnded = isGameEnded;
 			this.Winner = winner;
 			if (isGameEnded)
