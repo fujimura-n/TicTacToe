@@ -10,7 +10,7 @@ namespace TicTacToe.Models
 	//TicTacToeModel
 	public class Model : NotificationObject, ITicTacToeModel
 	{
-		private readonly Board<Player> board;
+		private readonly Board<PlayerForm> board;
 
 		public event EventHandler BoardChanged;
 		public event EventHandler CurrentPlayerChanged;
@@ -25,7 +25,8 @@ namespace TicTacToe.Models
 		{
 			this.BoardSize = boardSize;
 			this.AlignNumber = alignNumber;
-			this.board = new Board<Player>(Player.None, boardSize);
+			this.board = new Board<PlayerForm>(PlayerForm.None, boardSize);
+			this.CurrentPlayer = PlayerForm.Circle;
 		}
 
 		/// <summary>
@@ -46,19 +47,26 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// ゲームの勝者を取得します。
 		/// </summary>
-		public Player Winner { get; set; }
+		public PlayerForm Winner { get; set; }
 
 		/// <summary>
 		/// 現在駒を配置できるプレーヤーを取得します。
 		/// </summary>
-		public Player CurrentPlayer { get; set; }
+		public PlayerForm CurrentPlayer { get; set; }
 
 		/// <summary>
 		/// 盤上の駒の配置状態を取得します。
 		/// </summary>
-		public Player[,] BoardStatuses
+		public PlayerForm[,] BoardStatuses
 		{
 			get { return this.board.BoardStatuses; }
+		}
+
+		public void StartGame(PlayerForm firstMove = PlayerForm.Circle)
+		{
+			CurrentPlayer = firstMove;
+			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
+			var str = CurrentPlayer.ToString();
 		}
 
 		/// <summary>
@@ -68,14 +76,14 @@ namespace TicTacToe.Models
 		/// <param name="row">配置する行</param>
 		/// <param name="column">配置する列</param>
 		/// <param name="player">配置する駒</param>
-		public void PutPiece(int row, int column, Player player)
+		public void PutPiece(int row, int column, PlayerForm player)
 		{
 			if (IsGameEnded)
 			{
 				return;
 			}
 
-			if (this.board.BoardStatuses[row, column] != Player.None)
+			if (this.board.BoardStatuses[row, column] != PlayerForm.None)
 			{
 				return;
 			}
@@ -83,7 +91,7 @@ namespace TicTacToe.Models
 			this.board.PutPiece(row, column, player);
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
-			(bool isGameEnded, Player winner) = CheckIfGameEnded(BoardSize, AlignNumber);
+			(bool isGameEnded, PlayerForm winner) = CheckIfGameEnded(BoardSize, AlignNumber);
 			this.IsGameEnded = isGameEnded;
 			this.Winner = winner;
 			if (isGameEnded)
@@ -98,12 +106,12 @@ namespace TicTacToe.Models
 		/// </summary>
 		public void ResetGame()
 		{
-			this.board.ResetBoard(Player.None);
-			CurrentPlayer = Player.Circle;
+			this.board.ResetBoard(PlayerForm.None);
+			CurrentPlayer = PlayerForm.Circle;
 			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			BoardChanged.Invoke(this, EventArgs.Empty);
 			IsGameEnded = false;
-			Winner = Player.None;
+			Winner = PlayerForm.None;
 		}
 
 		/// <summary>
@@ -111,14 +119,14 @@ namespace TicTacToe.Models
 		/// </summary>
 		private void SwitchCurrentPleyer()
 		{
-			if (CurrentPlayer == Player.Circle)
+			if (CurrentPlayer == PlayerForm.Circle)
 			{
-				CurrentPlayer = Player.Cross;
+				CurrentPlayer = PlayerForm.Cross;
 				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			}
-			else if (CurrentPlayer == Player.Cross)
+			else if (CurrentPlayer == PlayerForm.Cross)
 			{
-				CurrentPlayer = Player.Circle;
+				CurrentPlayer = PlayerForm.Circle;
 				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
 			}
 		}
@@ -128,19 +136,19 @@ namespace TicTacToe.Models
 		/// </summary>
 		/// <returns name="IsGameEnded">ゲームが終了しているかどうか</returns>
 		/// <returns name="winner">ゲームの勝者</returns>
-		private (bool isGameEnded, Player winner) CheckIfGameEnded(int boardSize, int alignNumber)
+		private (bool isGameEnded, PlayerForm winner) CheckIfGameEnded(int boardSize, int alignNumber)
 		{
 			//行の判定
 			for (int i = 0; i < boardSize; i++)
 			{
-				var row = new List<Player>();
+				var row = new List<PlayerForm>();
 
 				for (int j = 0; j < boardSize; j++)
 				{
 					row.Add(this.BoardStatuses[i, j]);
 				}
 				
-				(bool isGameEnded, Player winner) = JudgeAlign(row, alignNumber);
+				(bool isGameEnded, PlayerForm winner) = JudgeAlign(row, alignNumber);
 				if (isGameEnded)
 				{
 					return (isGameEnded, winner);
@@ -151,13 +159,13 @@ namespace TicTacToe.Models
 			//列の判定
 			for (int j = 0; j < boardSize; j++)
 			{
-				var column = new List<Player>();
+				var column = new List<PlayerForm>();
 				for (int i = 0; i < boardSize; i++)
 				{
 					column.Add(this.BoardStatuses[i, j]);
 				}
 
-				(bool isGameEnded, Player winner) = JudgeAlign(column, alignNumber);
+				(bool isGameEnded, PlayerForm winner) = JudgeAlign(column, alignNumber);
 				if (isGameEnded)
 				{
 					return (isGameEnded, winner);
@@ -166,8 +174,8 @@ namespace TicTacToe.Models
 			}
 
 			//斜めの判定
-			var diagonally_right = new List<Player>();
-			var diagonally_left = new List<Player>();
+			var diagonally_right = new List<PlayerForm>();
+			var diagonally_left = new List<PlayerForm>();
 			for (int i = 0; i < boardSize; i++)
 			{
 				for (int j = 0; j < boardSize; j++)
@@ -194,7 +202,7 @@ namespace TicTacToe.Models
 
 					//判定
 					bool isGameEnded;
-					Player winner;
+					PlayerForm winner;
 					(isGameEnded, winner) = JudgeAlign(diagonally_right, alignNumber);
 					if (isGameEnded)
 					{
@@ -214,12 +222,12 @@ namespace TicTacToe.Models
 			//引き分け判定
 			foreach (var a in this.BoardStatuses)
 			{
-				if(a == Player.None)
+				if(a == PlayerForm.None)
 				{
-					return (false, Player.None);
+					return (false, PlayerForm.None);
 				}				
 			}
-			return (true, Player.None);
+			return (true, PlayerForm.None);
 
 		}
 
@@ -230,16 +238,16 @@ namespace TicTacToe.Models
 		/// <param name="alignNumber">列の中でいくつ揃ったら勝ちとするか</param>
 		/// <returns name="IsGameEnded">ゲームが終了しているかどうか</returns>
 		/// <returns name="winner">ゲームの勝者</returns>
-		private (bool isGameEnded, Player winner) JudgeAlign(List<Player> list, int alignNumber)
+		private (bool isGameEnded, PlayerForm winner) JudgeAlign(List<PlayerForm> list, int alignNumber)
 		{
 			if (list.Count < alignNumber)
 			{
-				return (false, Player.None);
+				return (false, PlayerForm.None);
 			}
 			var count = 0;
 			for (int index = 0; index < list.Count - 1; index++)
 			{
-				if (!list[index].Equals(Player.None) && list[index].Equals(list[index + 1]))
+				if (!list[index].Equals(PlayerForm.None) && list[index].Equals(list[index + 1]))
 				{
 					count++;
 				}
@@ -253,7 +261,7 @@ namespace TicTacToe.Models
 					return (true, list[index]);
 				}
 			}
-			return (false, Player.None);
+			return (false, PlayerForm.None);
 		}
 	}
 }

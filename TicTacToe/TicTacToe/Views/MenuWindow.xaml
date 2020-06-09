@@ -37,8 +37,11 @@
 
 		<Grid x:Name="TitleGrid" Grid.Row="0"></Grid>
 		<Grid x:Name="MenuGrid" Grid.Row="1">
-			<Button x:Name="PvPModeButton" Content="対人モード" Command="{Binding Path=SelectPvPModeCommand}" HorizontalAlignment="Left" Margin="86,0,0,0" VerticalAlignment="Center" Height="52" Width="150"/>
-			<Button x:Name="PvCModeButton" Content="CPUモード" Command="{Binding Path=SelectPvCModeCommand}" HorizontalAlignment="Left" Margin="286,0,0,0" VerticalAlignment="Center" Height="52" Width="150"/>
+			<ComboBox x:Name="CirclePlayer" Margin="30,31,330,21" ItemsSource="{Binding ChoiceList}" SelectedValue="{Binding CirclePlayer, Mode=TwoWay}">
+			</ComboBox>
+			<ComboBox x:Name="CrossPlayer" Margin="220,31,140,21" ItemsSource="{Binding ChoiceList}" SelectedValue="{Binding CrossPlayer, Mode=TwoWay}">
+			</ComboBox>
+			<Button x:Name="StartButton" Content="ゲーム開始" Command="{Binding GameStartCommand}" HorizontalAlignment="Left" Margin="434,34,0,0" VerticalAlignment="Top"/>
 		</Grid>
 	</Grid>
 

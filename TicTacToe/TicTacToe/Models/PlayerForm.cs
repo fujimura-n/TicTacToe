@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TicTacToe.Models
 {
-	public enum Player
+	public enum PlayerForm
 	{
 		Circle,
 		Cross,

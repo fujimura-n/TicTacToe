@@ -29,18 +29,23 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// ゲームの勝者を取得します。
 		/// </summary>
-		Player Winner { get; set; }
+		PlayerForm Winner { get; set; }
 
 		/// <summary>
 		/// 現在駒を配置できるプレーヤーを取得します。
 		/// </summary>
-		Player CurrentPlayer { get; }
+		PlayerForm CurrentPlayer { get; }
 
 		/// <summary>
 		/// 盤上の駒の配置状態を取得します。
 		/// </summary>
-		Player[,] BoardStatuses{ get; }
+		PlayerForm[,] BoardStatuses{ get; }
 
+		/// <summary>
+		/// ゲームを開始します。
+		/// </summary>
+		/// <param name="firstMove">先手のプレイヤー</param>
+		void StartGame(PlayerForm firstMove = PlayerForm.Circle);
 
 		/// <summary>
 		/// 盤上に駒を配置します。
@@ -49,7 +54,7 @@ namespace TicTacToe.Models
 		/// <param name="row">配置する行</param>
 		/// <param name="column">配置する列</param>
 		/// <param name="player">配置する駒</param>
-		void PutPiece(int row, int column, Player player);
+		void PutPiece(int row, int column, PlayerForm player);
 
 		/// <summary>
 		/// ゲームをリセットします。

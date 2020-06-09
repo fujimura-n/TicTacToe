@@ -18,5 +18,6 @@ namespace TicTacToe.Models.Contexts
 		/// Modelを取得します。
 		/// </summary>
 		public ITicTacToeModel TicTacToeModel { get; set; }
+
 	}
 }

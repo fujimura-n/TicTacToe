@@ -1,9 +1,7 @@
 ﻿using Livet;
 using Livet.Commands;
 using Livet.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
 using TicTacToe.Models;
 using TicTacToe.Models.Contexts;
 
@@ -15,51 +13,54 @@ namespace TicTacToe.ViewModels
 		private const int AlignNumber = 5;
 		public void Initialize()
 		{
-			
+
 		}
 
+		private ViewModelCommand _GameStartCommand;
 
-		private ViewModelCommand _SelectPvPModeCommand;
-
-		private ViewModelCommand _SelectPvCModeCommand;
-
-		public ViewModelCommand SelectPvPModeCommand
+		public ViewModelCommand GameStartCommand
 		{
 			get
 			{
-				if (_SelectPvPModeCommand == null)
+				if(_GameStartCommand == null)
 				{
-					_SelectPvPModeCommand = new ViewModelCommand(SelectPvPMode);
+					_GameStartCommand = new ViewModelCommand(GameStart);
 				}
-				return _SelectPvPModeCommand;
+				return _GameStartCommand;
 			}
 		}
-		public ViewModelCommand SelectPvCModeCommand
+		public ObservableCollection<string> ChoiceList { get; } = new ObservableCollection<string>() { "人間", "CPU" };
+
+		public string CirclePlayer { get; set; }
+
+		public string CrossPlayer { get; set; }
+
+		public void GameStart()
 		{
-			get
+			if(CirclePlayer == null || CrossPlayer == null)
 			{
-				if (_SelectPvCModeCommand == null)
-				{
-					_SelectPvCModeCommand = new ViewModelCommand(SelectPvCMode);
-				}
-				return _SelectPvCModeCommand;
+				return;
 			}
-		}
-
-
-
-		public void SelectPvPMode()
-		{
-			ModelProvider.Instance.TicTacToeModel = new Model(BoardSize, AlignNumber);
+			ModelProvider.Instance.TicTacToeModel = new PlayerInjectionModel(BoardSize, AlignNumber, GetPlayerInstance(CirclePlayer), GetPlayerInstance(CrossPlayer));
 			var message = new TransitionMessage(new MainWindowViewModel(), "SelectModeMessageKey");
 			Messenger.Raise(message);
 		}
 
-		public void SelectPvCMode()
+		private IPlayer GetPlayerInstance(string player)
 		{
-			ModelProvider.Instance.TicTacToeModel = new PvCTicTacToeModel(BoardSize, AlignNumber);
-			var message = new TransitionMessage(new MainWindowViewModel(), "SelectModeMessageKey");
-			Messenger.Raise(message);
+			if (player == "人間")
+			{
+				return new PersonPlayer();
+			}
+			else if (player == "CPU")
+			{
+				return new CPUPlayer();
+			}
+			else
+			{
+				return new PersonPlayer();
+			}
 		}
+
 	}
 }

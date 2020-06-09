@@ -55,11 +55,10 @@ namespace TicTacToe.Views
 		public MainWindow()
 		{
 			InitializeComponent();
+			buttons = new Button[boardSize, boardSize];
 			this.model.BoardChanged += new EventHandler(this.UpdateBoard);
 			this.model.CurrentPlayerChanged += new EventHandler((s, e) => this.DisplayCurrentPlayer());
 			this.model.GameEnded += new EventHandler<GameEndedEventArgs>(this.ExitGame);
-			buttons = new Button[boardSize, boardSize];
-
 
 			//Gridの設定
 			for (int i = 0; i < boardSize; i++)
@@ -99,6 +98,8 @@ namespace TicTacToe.Views
 				}
 			}
 
+			this.model.StartGame();
+
 			//Labelの設定
 			DisplayCurrentPlayer();
 
@@ -110,8 +111,6 @@ namespace TicTacToe.Views
 
 			//GameResultLabelの設定
 			GameResultLabel.Content = String.Empty;
-
-
 
 		}
 		/// <summary>
@@ -129,13 +128,13 @@ namespace TicTacToe.Views
 					var status = model.BoardStatuses[i, j];
 					switch (status)
 					{
-						case Player.Circle:
+						case PlayerForm.Circle:
 							buttons[i, j].Background = circleImageBrush;
 							break;
-						case Player.Cross:
+						case PlayerForm.Cross:
 							buttons[i, j].Background = crossImageBrush;
 							break;
-						case Player.None:
+						case PlayerForm.None:
 							buttons[i, j].Background = null;
 							buttons[i, j].Content = String.Empty;
 							break;
@@ -161,13 +160,13 @@ namespace TicTacToe.Views
 			var messasge = String.Empty;
 			switch (model.CurrentPlayer)
 			{
-				case Player.Circle:
+				case PlayerForm.Circle:
 					messasge = "○の番です";
 					break;
-				case Player.Cross:
+				case PlayerForm.Cross:
 					messasge = "✕の番です";
 					break;
-				case Player.None:
+				case PlayerForm.None:
 					messasge = String.Empty;
 					break;
 
@@ -187,20 +186,20 @@ namespace TicTacToe.Views
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void SetGameResultLabel(Player winner)
+		private void SetGameResultLabel(PlayerForm winner)
 		{
 			var message = String.Empty;
 			switch (winner)
 			{
-				case Player.Circle:
+				case PlayerForm.Circle:
 					message = "○の勝ち";
 					WinnerImage.Background = circleWinnerImage;
 					break;
-				case Player.Cross:
+				case PlayerForm.Cross:
 					message = "✕の勝ち";
 					WinnerImage.Background = crossWinnerImage;
 					break;
-				case Player.None:
+				case PlayerForm.None:
 					message = "引き分け";
 					break;
 			}

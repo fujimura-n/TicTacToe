@@ -7,24 +7,30 @@ using Livet;
 
 namespace TicTacToe.Models
 {
-	public class PvCTicTacToeModel : NotificationObject, ITicTacToeModel
+	public class PlayerInjectionModel : NotificationObject, ITicTacToeModel
 	{
+		private readonly IPlayer circlePyaler;
+		private readonly IPlayer crossPlayer;
 		private Model model;
 
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		/// <param name="boardSize">ボードの大きさ</param>
-		/// <param name="alignNumber">いくつ揃ったら勝ちとするか</param>
-		public PvCTicTacToeModel(int boardSize, int alignNumber)
+		/// <param name="boardSize"></param>
+		/// <param name="alignNumber"></param>
+		/// <param name="circlePyaler"></param>
+		/// <param name="crossPlayer"></param>
+		public PlayerInjectionModel(int boardSize, int alignNumber, IPlayer circlePyaler, IPlayer crossPlayer)
 		{
 			this.BoardSize = boardSize;
 			this.AlignNumber = alignNumber;
 			this.model = new Model(boardSize, alignNumber);
 
 			this.model.BoardChanged += new EventHandler((s, e) => this.BoardChanged.Invoke(this, EventArgs.Empty));
-			this.model.CurrentPlayerChanged += new EventHandler(async (s, e) => await this.CurrentPlayerChangedActionAsync());
+			this.model.CurrentPlayerChanged += new EventHandler((s, e) => this.CurrentPlayerChangedActionAsync());
 			this.model.GameEnded += new EventHandler<GameEndedEventArgs>((s, e) => this.GameEnded.Invoke(this, e));
+			this.circlePyaler = circlePyaler;
+			this.crossPlayer = crossPlayer;
 		}
 
 		/// <summary>
@@ -79,62 +85,43 @@ namespace TicTacToe.Models
 
 		public void PutPiece(int row, int column, PlayerForm player)
 		{
-			if (player.Equals(PlayerForm.Cross))
+			switch (player)
 			{
-				///CPUプレーヤーの場合の番にユーザーが駒を配置しようとした場合は何もしない
-				return;
-			}
-			model.PutPiece(row, column, player);
-		}
-
-		/// <summary>
-		/// ランダムに✕の駒を配置します。
-		/// </summary>
-		private void PutPieceRandom()
-		{
-			int row;
-			int column;
-			(row, column) = VacantPosition();
-			model.PutPiece(row, column, PlayerForm.Cross);
-		}
-
-		/// <summary>
-		/// 駒が置かれていない座標をランダムに取得します。
-		/// </summary>
-		/// <returns></returns>
-		private (int row, int column) VacantPosition()
-		{
-			int row;
-			int column;
-			Random random = new Random();
-			row = random.Next(0, BoardSize);
-			column = random.Next(0, BoardSize);
-
-			while (!this.BoardStatuses[row, column].Equals(PlayerForm.None))
-			{
-				row = random.Next(0, BoardSize);
-				column = random.Next(0, BoardSize);
-			}
-
-			return (row, column);
-		}
-
-		/// <summary>
-		/// CurrentPlayer変更時の処理をします。
-		/// </summary>
-		private async Task CurrentPlayerChangedActionAsync()
-		{
-			this.CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
-			if (model.CurrentPlayer.Equals(PlayerForm.Cross))
-			{
-				await Task.Delay(1000);
-				PutPieceRandom();
+				case PlayerForm.Circle:
+					this.circlePyaler.PutPiece(row, column, player, this.model);
+					break;
+				case PlayerForm.Cross:
+					this.crossPlayer.PutPiece(row, column, player, this.model);
+					break;
+				default:
+					return;
 			}
 		}
 
 		public void ResetGame()
 		{
 			model.ResetGame();
+		}
+
+		/// <summary>
+		/// CurrentPlayer変更時の処理をします。
+		/// </summary>
+		private void CurrentPlayerChangedActionAsync()
+		{
+			this.CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
+
+			switch (model.CurrentPlayer)
+			{
+				case PlayerForm.Circle:
+					this.circlePyaler.ChangedToMyTurn(model.CurrentPlayer, this.model);
+					break;
+				case PlayerForm.Cross:
+					this.crossPlayer.ChangedToMyTurn(model.CurrentPlayer, this.model);
+					break;
+				default:
+					return;
+			}
+
 		}
 
 	}
