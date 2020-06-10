@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TicTacToe.Models.Common;
 
 namespace TicTacToe.Views
 {
@@ -23,16 +24,8 @@ namespace TicTacToe.Views
      */
 	public partial class MenuWindow : Window
 	{
-		private ImageBrush bgImageBrush = new ImageBrush()
-		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_sougen.jpg", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
-		private ImageBrush titleImageBrush = new ImageBrush()
-		{
-			ImageSource = new System.Windows.Media.Imaging.BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/tictactoe.png", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
+		private ImageBrush bgImageBrush = ImageResourceProvider.CreateImageBrush("bg_natural_sougen.jpg");
+		private ImageBrush titleImageBrush = ImageResourceProvider.CreateImageBrush("tictactoe.png");
 
 		public MenuWindow()
 		{

@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TicTacToe.Models;
+using TicTacToe.Models.Common;
 using TicTacToe.Models.Contexts;
 
 namespace TicTacToe.Views
@@ -30,27 +31,11 @@ namespace TicTacToe.Views
 		private readonly Button[,] buttons;
 		private readonly ITicTacToeModel model = ModelProvider.Instance.TicTacToeModel;
 		private readonly int boardSize = ModelProvider.Instance.TicTacToeModel.BoardSize;
-		private readonly ImageBrush bgImageBrush = new ImageBrush() { ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/bg_natural_mori.jpg", UriKind.Relative)) };
-		private readonly ImageBrush crossImageBrush = new ImageBrush()
-		{
-			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_kuma_batsu.png", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
-		private readonly ImageBrush circleImageBrush = new ImageBrush()
-		{
-			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_quiz_usagi_maru.png", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
-		private readonly ImageBrush crossWinnerImage = new ImageBrush()
-		{
-			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_bear.png", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
-		private readonly ImageBrush circleWinnerImage = new ImageBrush()
-		{
-			ImageSource = new BitmapImage(new Uri("C:/Users/p000526866/git/TicTacToe/TicTacToe/TicTacToe/Resources/animal_dance_rabbit.png", UriKind.Relative)),
-			Stretch = Stretch.Uniform
-		};
+		private readonly ImageBrush bgImageBrush = ImageResourceProvider.CreateImageBrush("bg_natural_mori.jpg", Stretch.Fill);
+		private readonly ImageBrush crossImageBrush = ImageResourceProvider.CreateImageBrush("animal_quiz_kuma_batsu.png");
+		private readonly ImageBrush circleImageBrush = ImageResourceProvider.CreateImageBrush("animal_quiz_usagi_maru.png");
+		private readonly ImageBrush crossWinnerImage = ImageResourceProvider.CreateImageBrush("animal_dance_bear.png");
+		private readonly ImageBrush circleWinnerImage = ImageResourceProvider.CreateImageBrush("animal_dance_rabbit.png");
 
 		public MainWindow()
 		{
@@ -205,8 +190,6 @@ namespace TicTacToe.Views
 			}
 			GameResultLabel.Content = message;
 		}
-
-
 
 	}
 }
