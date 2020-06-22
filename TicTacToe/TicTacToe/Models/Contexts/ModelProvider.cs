@@ -17,7 +17,7 @@ namespace TicTacToe.Models.Contexts
 		/// <summary>
 		/// Modelを取得します。
 		/// </summary>
-		public ITicTacToeModel TicTacToeModel { get; set; }
+		public PlayerInjectionModel TicTacToeModel { get; set; }
 
 	}
 }

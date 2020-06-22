@@ -29,7 +29,7 @@ namespace TicTacToe.Views
 	{
 		private const int ButtonSize = 110;
 		private readonly Button[,] buttons;
-		private readonly ITicTacToeModel model = ModelProvider.Instance.TicTacToeModel;
+		private readonly PlayerInjectionModel model = ModelProvider.Instance.TicTacToeModel;
 		private readonly int boardSize = ModelProvider.Instance.TicTacToeModel.BoardSize;
 		private readonly ImageBrush bgImageBrush = ImageResourceProvider.CreateImageBrush("bg_natural_mori.jpg", Stretch.Fill);
 		private readonly ImageBrush crossImageBrush = ImageResourceProvider.CreateImageBrush("animal_quiz_kuma_batsu.png");

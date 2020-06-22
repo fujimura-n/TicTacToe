@@ -8,7 +8,7 @@ using Livet;
 namespace TicTacToe.Models
 {
 	//TicTacToeGameModel
-	public class PlayerInjectionModel : NotificationObject, ITicTacToeModel
+	public class PlayerInjectionModel : NotificationObject
 	{
 		private readonly IPlayer circlePyaler;
 		private readonly IPlayer crossPlayer;
