@@ -40,9 +40,9 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
 		/// </summary>
-		public bool IsGameEnded
+		public GameStatus GameStatus
 		{
-			get { return model.IsGameEnded; }
+			get { return model.GameStatus; }
 			private set { }
 		}
 
@@ -72,9 +72,9 @@ namespace TicTacToe.Models
 		public event EventHandler CurrentPlayerChanged;
 		public event EventHandler<GameEndedEventArgs> GameEnded;
 
-		public void StartGame(PlayerForm firstMove = PlayerForm.Circle)
+		public void StartGame()
 		{
-			model.StartGame(firstMove);
+			model.StartGame();
 		}
 
 		public void PutPiece(int row, int column, PlayerForm player)

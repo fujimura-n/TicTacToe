@@ -7,6 +7,7 @@ using Livet;
 
 namespace TicTacToe.Models
 {
+	//TicTacToeGameModel
 	public class PlayerInjectionModel : NotificationObject, ITicTacToeModel
 	{
 		private readonly IPlayer circlePyaler;
@@ -26,9 +27,9 @@ namespace TicTacToe.Models
 			this.AlignNumber = alignNumber;
 			this.model = new Model(boardSize, alignNumber);
 
-			this.model.BoardChanged += new EventHandler((s, e) => this.BoardChanged.Invoke(this, EventArgs.Empty));
+			this.model.BoardChanged += new EventHandler((s, e) => this.BoardChanged?.Invoke(this, EventArgs.Empty));
 			this.model.CurrentPlayerChanged += new EventHandler((s, e) => this.CurrentPlayerChangedActionAsync());
-			this.model.GameEnded += new EventHandler<GameEndedEventArgs>((s, e) => this.GameEnded.Invoke(this, e));
+			this.model.GameEnded += new EventHandler<GameEndedEventArgs>((s, e) => this.GameEnded?.Invoke(this, e));
 			this.circlePyaler = circlePyaler;
 			this.crossPlayer = crossPlayer;
 		}
@@ -46,9 +47,9 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// ゲームが終了しているかどうかを取得します。
 		/// </summary>
-		public bool IsGameEnded
+		public GameStatus GameStatus
 		{
-			get { return model.IsGameEnded; }
+			get { return model.GameStatus; }
 			private set { }
 		}
 
@@ -78,9 +79,9 @@ namespace TicTacToe.Models
 		public event EventHandler CurrentPlayerChanged;
 		public event EventHandler<GameEndedEventArgs> GameEnded;
 
-		public void StartGame(PlayerForm firstMove = PlayerForm.Circle)
+		public void StartGame()
 		{
-			model.StartGame(firstMove);
+			model.StartGame();
 		}
 
 		public void PutPiece(int row, int column, PlayerForm player)
@@ -108,7 +109,7 @@ namespace TicTacToe.Models
 		/// </summary>
 		private void CurrentPlayerChangedActionAsync()
 		{
-			this.CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
+			this.CurrentPlayerChanged?.Invoke(this, EventArgs.Empty);
 
 			switch (model.CurrentPlayer)
 			{

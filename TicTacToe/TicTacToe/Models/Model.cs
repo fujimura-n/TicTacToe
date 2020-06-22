@@ -7,7 +7,7 @@ using Livet;
 
 namespace TicTacToe.Models
 {
-	//TicTacToeModel
+	//BoardModel
 	public class Model : NotificationObject, ITicTacToeModel
 	{
 		private readonly Board<PlayerForm> board;
@@ -27,6 +27,7 @@ namespace TicTacToe.Models
 			this.AlignNumber = alignNumber;
 			this.board = new Board<PlayerForm>(PlayerForm.None, boardSize);
 			this.CurrentPlayer = PlayerForm.Circle;
+			this.GameStatus = GameStatus.BeforeStart;
 		}
 
 		/// <summary>
@@ -40,9 +41,9 @@ namespace TicTacToe.Models
 		public int AlignNumber { get; }
 
 		/// <summary>
-		/// ゲームが終了しているかどうかを取得します。
+		/// ゲームの状態を取得します。
 		/// </summary>
-		public bool IsGameEnded { get; private set; }
+		public GameStatus GameStatus { get; private set; }
 
 		/// <summary>
 		/// ゲームの勝者を取得します。
@@ -62,11 +63,10 @@ namespace TicTacToe.Models
 			get { return this.board.BoardStatuses; }
 		}
 
-		public void StartGame(PlayerForm firstMove = PlayerForm.Circle)
+		public void StartGame()
 		{
-			CurrentPlayer = firstMove;
-			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
-			var str = CurrentPlayer.ToString();
+			ResetGame();
+			GameStatus = GameStatus.Progressing;
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace TicTacToe.Models
 		/// <param name="player">配置する駒</param>
 		public void PutPiece(int row, int column, PlayerForm player)
 		{
-			if (IsGameEnded)
+			if (GameStatus == GameStatus.Finished)
 			{
 				return;
 			}
@@ -89,10 +89,13 @@ namespace TicTacToe.Models
 			}
 
 			this.board.PutPiece(row, column, player);
-			BoardChanged.Invoke(this, EventArgs.Empty);
+			BoardChanged?.Invoke(this, EventArgs.Empty);
 			SwitchCurrentPleyer();
 			(bool isGameEnded, PlayerForm winner) = CheckIfGameEnded(BoardSize, AlignNumber);
-			this.IsGameEnded = isGameEnded;
+			if (isGameEnded)
+			{
+				this.GameStatus = GameStatus.Finished;
+			}		
 			this.Winner = winner;
 			if (isGameEnded)
 			{
@@ -108,9 +111,9 @@ namespace TicTacToe.Models
 		{
 			this.board.ResetBoard(PlayerForm.None);
 			CurrentPlayer = PlayerForm.Circle;
-			CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
-			BoardChanged.Invoke(this, EventArgs.Empty);
-			IsGameEnded = false;
+			CurrentPlayerChanged?.Invoke(this, EventArgs.Empty);
+			BoardChanged?.Invoke(this, EventArgs.Empty);
+			this.GameStatus = GameStatus.BeforeStart;
 			Winner = PlayerForm.None;
 		}
 
@@ -122,12 +125,12 @@ namespace TicTacToe.Models
 			if (CurrentPlayer == PlayerForm.Circle)
 			{
 				CurrentPlayer = PlayerForm.Cross;
-				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
+				CurrentPlayerChanged?.Invoke(this, EventArgs.Empty);
 			}
 			else if (CurrentPlayer == PlayerForm.Cross)
 			{
 				CurrentPlayer = PlayerForm.Circle;
-				CurrentPlayerChanged.Invoke(this, EventArgs.Empty);
+				CurrentPlayerChanged?.Invoke(this, EventArgs.Empty);
 			}
 		}
 
@@ -263,5 +266,11 @@ namespace TicTacToe.Models
 			}
 			return (false, PlayerForm.None);
 		}
+	}
+	public enum GameStatus
+	{
+		BeforeStart,
+		Progressing,
+		Finished,
 	}
 }

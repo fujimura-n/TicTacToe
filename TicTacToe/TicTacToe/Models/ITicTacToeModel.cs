@@ -22,9 +22,9 @@ namespace TicTacToe.Models
 
 
 		/// <summary>
-		/// ゲームが終了しているかどうかを取得します。
+		/// ゲームの状態を取得します。
 		/// </summary>
-		bool IsGameEnded { get; }
+		GameStatus GameStatus { get; }
 
 		/// <summary>
 		/// ゲームの勝者を取得します。
@@ -44,8 +44,7 @@ namespace TicTacToe.Models
 		/// <summary>
 		/// ゲームを開始します。
 		/// </summary>
-		/// <param name="firstMove">先手のプレイヤー</param>
-		void StartGame(PlayerForm firstMove = PlayerForm.Circle);
+		void StartGame();
 
 		/// <summary>
 		/// 盤上に駒を配置します。
