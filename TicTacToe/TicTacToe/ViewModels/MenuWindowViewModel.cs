@@ -9,7 +9,7 @@ namespace TicTacToe.ViewModels
 {
 	public class MenuWindowViewModel : ViewModel
 	{
-		private const int BoardSize = 3;
+		private const int BoardSize = 5;
 		private const int AlignNumber = 3;
 		public void Initialize()
 		{

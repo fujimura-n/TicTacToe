@@ -63,7 +63,12 @@ namespace TicTacToe.Models
 				{
 					count = list.Count(element => element == player.GetOpponentPlayerForm());
 					row = i;
-					column = list.IndexOf(PlayerForm.None);
+					var index = random.Next(0, list.Count - 1);
+					while (list[index] != PlayerForm.None)
+					{
+						index = random.Next(0, list.Count - 1);
+					}
+					column = index;
 				}
 				list.Clear();
 			}
@@ -79,7 +84,12 @@ namespace TicTacToe.Models
 				if (!list.Contains(player) && list.Contains(player.GetOpponentPlayerForm()) && count < list.Count(element => element == player.GetOpponentPlayerForm()))
 				{
 					count = list.Count(element => element == player.GetOpponentPlayerForm());
-					row = list.IndexOf(PlayerForm.None);
+					var index = random.Next(0, list.Count - 1);
+					while (list[index] != PlayerForm.None)
+					{
+						index = random.Next(0, list.Count - 1);
+					}
+					row = index;
 					column = j;
 				}
 				list.Clear();
@@ -106,8 +116,13 @@ namespace TicTacToe.Models
 					if (!list.Contains(player) && list.Contains(player.GetOpponentPlayerForm()) && count < list.Count(element => element == player.GetOpponentPlayerForm()))
 					{
 						count = list.Count(element => element == player.GetOpponentPlayerForm());
-						row = i - list.IndexOf(PlayerForm.None);
-						column = j + list.IndexOf(PlayerForm.None); ;
+						var index = random.Next(0, list.Count - 1);
+						while (list[index] != PlayerForm.None)
+						{
+							index = random.Next(0, list.Count - 1);
+						}
+						row = i - index;
+						column = j + index;
 					}
 					list.Clear();
 				}
@@ -134,8 +149,13 @@ namespace TicTacToe.Models
 					if (!list.Contains(player) && list.Contains(player.GetOpponentPlayerForm()) && count < list.Count(element => element == player.GetOpponentPlayerForm()))
 					{
 						count = list.Count(element => element == player.GetOpponentPlayerForm());
-						row = i + list.IndexOf(PlayerForm.None);
-						column = j + list.IndexOf(PlayerForm.None); ;
+						var index = random.Next(0, list.Count - 1);
+						while (list[index] != PlayerForm.None)
+						{
+							index = random.Next(0, list.Count - 1);
+						}
+						row = i + index;
+						column = j + index;
 					}
 					list.Clear();
 				}
