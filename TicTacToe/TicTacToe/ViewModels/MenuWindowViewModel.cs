@@ -9,8 +9,8 @@ namespace TicTacToe.ViewModels
 {
 	public class MenuWindowViewModel : ViewModel
 	{
-		private const int BoardSize = 5;
-		private const int AlignNumber = 5;
+		private const int BoardSize = 3;
+		private const int AlignNumber = 3;
 		public void Initialize()
 		{
 
@@ -29,7 +29,7 @@ namespace TicTacToe.ViewModels
 				return _GameStartCommand;
 			}
 		}
-		public ObservableCollection<string> ChoiceList { get; } = new ObservableCollection<string>() { "人間", "CPU" };
+		public ObservableCollection<string> ChoiceList { get; } = new ObservableCollection<string>() { "人間", "CPU", "CPU (つよい)" };
 
 		public string CirclePlayer { get; set; }
 
@@ -55,6 +55,10 @@ namespace TicTacToe.ViewModels
 			else if (player == "CPU")
 			{
 				return new CPUPlayer();
+			}
+			else if(player == "CPU (つよい)")
+			{
+				return new CleverCPUPlayer();
 			}
 			else
 			{
